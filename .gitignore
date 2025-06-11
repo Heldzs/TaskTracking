@@ -192,3 +192,31 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+
+
+---
+
+### ✅ `.gitignore` no topo
+Use um único `.gitignore` na raiz, incluindo regras para Python, Node, Android:
+
+```gitignore
+# Python
+__pycache__/
+*.pyc
+*.pyo
+env/
+venv/
+
+# Node
+node_modules/
+
+# Android
+*.iml
+.gradle/
+build/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

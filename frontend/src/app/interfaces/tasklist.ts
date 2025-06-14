@@ -1,8 +1,8 @@
 export interface Tasklist {
   id: Number;
-  user: String;
   title: String;
-  priority: String;
+  priority: Number;
   done: Boolean;
-  created_at: Date;
+  due_date: String;
+  created_at: String;
 }

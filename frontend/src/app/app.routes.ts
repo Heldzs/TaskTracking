@@ -5,8 +5,8 @@ import { App } from './components/appComponent/app'; // seu root layout
 // + dashboard futuramente...
 
 export const routes: Routes = [
-  { path: '', component: App }, // Página inicial (pode mudar depois)
+  { path: '', component: LoginComponent }, // Página inicial (pode mudar depois)
   { path: 'login', component: LoginComponent },
   { path: 'tasklist', component: TasklistComponent },
-  { path: '**', redirectTo: 'tasklist'}
+  // { path: '**', redirectTo: 'tasklist'}
 ];

@@ -26,6 +26,7 @@ urlpatterns = [
 
     # API da sua aplicação
     path('api/', include('tasktracking_app.urls')),
+    path('', include('tasktracking_app.urls')),
 
     # Endpoints de autenticação JWT
     path('api/auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

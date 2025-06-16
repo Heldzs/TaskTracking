@@ -1,20 +1,24 @@
-// src/app/interceptors/auth.interceptor.ts
-import { inject } from '@angular/core';
-import { HttpInterceptorFn } from '@angular/common/http';
-import { AuthService } from '../services/auth.service';
+import { Injectable } from '@angular/core';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
-export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const authService = inject(AuthService);
-  const token = authService.getToken();
-
-  if (token) {
-    const cloned = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return next(cloned);
+@Injectable()
+export class authInterceptor implements HttpInterceptor {
+  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      request = request.clone({ setHeaders: { Authorization: `Bearer ${token}` } });
+    }
+    return next.handle(request).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401 || error.status === 403) {
+          localStorage.removeItem('access_token');
+          localStorage.removeItem('refresh_token');
+          alert('Sessão expirada ou não autorizado. Faça login novamente.');
+        }
+        return throwError(error);
+      })
+    );
   }
-
-  return next(req);
-};
+}

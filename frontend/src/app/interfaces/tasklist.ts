@@ -1,20 +1,21 @@
 export interface Tasklist {
-  id: Number;
-  title: String;
-  priority: Number;
-  done: Boolean;
-  due_date: String;
-  created_at: String;
+  id?: number;
+  title: string;
+  priority?: number;
+  done?: boolean;
+  due_date?: string;
+  created_at?: string;
+  tasks?: Task[];
 }
 
-export interface Tasks {
-  id: Number;
-  tasklist: Number;
-  content: String;
-  priority: Number;
-  created_at: String;
-  due_date: String;
-  done: Boolean;
+export interface Task {
+  id?: number;
+  tasklist?: number;
+  content: string;
+  priority?: string
+  created_at?: string;
+  due_date?: string;
+  done?: boolean;
 }
 
 export interface Category {

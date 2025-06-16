@@ -1,29 +1,28 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private tokenKey = 'access_token';
-  public isAuthenticated = new BehaviorSubject<boolean>(false);
-
+  private apiUrl = 'http://127.0.0.1:8000/api/';
   constructor(private http: HttpClient) {}
-
-  login(username: string, password: string) {
-    return this.http.post<any>('http://localhost:8000/api/auth/token/', { username, password });
+  register(userData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}register/`, userData);
   }
-
-  saveToken(token: string) {
-    localStorage.setItem(this.tokenKey, token);
-    this.isAuthenticated.next(true);
+  login(credentials: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}token/`, credentials).pipe(
+      tap((response: any) => {
+        localStorage.setItem('access_token', response.access);
+        localStorage.setItem('refresh_token', response.refresh);
+      })
+    );
   }
-
-  getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+  logout(): void {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
   }
-
-  logout() {
-    localStorage.removeItem(this.tokenKey);
-    this.isAuthenticated.next(false);
+  isAuthenticated(): boolean {
+    return !!localStorage.getItem('access_token');
   }
 }

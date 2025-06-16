@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Tasklist } from '../interfaces/tasklist';
+import { Tasklist, Tasks, Category } from '../interfaces/tasklist';
 
 @Injectable({
   providedIn: 'root'
@@ -30,3 +30,4 @@ export class TasklistService {
     return this.http.delete<any>(`${this.apiUrl}${id}/`);
   }
 }
+

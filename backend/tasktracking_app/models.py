@@ -10,6 +10,12 @@ class TaskList(models.Model):
         db_column="id_user",
     )
     title = models.CharField(db_column="ds_title", max_length=200, null=False)
+    category = models.ForeignKey(
+        "Category",
+        on_delete=models.DO_NOTHING,
+        db_column="id_category",
+        null=True,
+    )
     priority = models.IntegerField(db_column="nr_priority", null=False, default=0)
     created_at = models.DateTimeField(
         db_column="dt_created", auto_now_add=True, null=True
@@ -28,7 +34,7 @@ class Task(models.Model):
         on_delete=models.CASCADE,
         db_column="id_task_list",
     )
-    content = models.TextField(db_column="ds_content", null=False)
+    content = models.TextField(db_column="ds_content", blank=True, null=True)
     priority = models.IntegerField(db_column="nr_priority", null=False, default=0)
     created_at = models.DateTimeField(
         db_column="dt_created", auto_now_add=True, null=True
@@ -37,7 +43,6 @@ class Task(models.Model):
 
     def __str__(self):
         return self.content[:100]
-
 
 class Category(models.Model):
     id = models.BigAutoField(db_column="id", null=False, primary_key=True)

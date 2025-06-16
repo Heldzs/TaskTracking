@@ -62,20 +62,25 @@ export class LoginComponent {
   }
 
   onLogin(): void {
-    if (this.loginForm.valid) {
-      this.authService.login(this.loginForm.value).subscribe(
-        (response) => {
-          alert('Login bem-sucedido!');
-          this.loginForm.reset();
-          this.loggedIn.emit(); // Emite o evento para o componente pai
-        },
-        (error) => {
-          console.error('Erro no login:', error);
-          alert('Erro no login: Usuário ou senha inválidos.');
-        }
-      );
-    } else {
-      alert('Preencha usuário e senha para login.');
-    }
+  if (this.loginForm.valid) {
+    this.authService.login(this.loginForm.value).subscribe(
+      (response) => {
+        // Armazena os tokens no localStorage
+        localStorage.setItem('access_token', response.access);
+        localStorage.setItem('refresh_token', response.refresh);
+
+        alert('Login bem-sucedido!');
+        this.loginForm.reset();
+        this.loggedIn.emit(); // Emite o evento para o componente pai
+      },
+      (error) => {
+        console.error('Erro no login:', error);
+        alert('Erro no login: Usuário ou senha inválidos.');
+      }
+    );
+  } else {
+    alert('Preencha usuário e senha para login.');
   }
+}
+
 }

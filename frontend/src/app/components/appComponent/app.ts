@@ -10,4 +10,5 @@ import { RouterOutlet, RouterLink } from '@angular/router';
 })
 export class App {
   protected title = 'tasktracking';
+registerForm: any;
 }

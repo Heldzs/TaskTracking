@@ -7,6 +7,11 @@ router.register(r'tasklists', TaskListViewSet)
 router.register(r'tasks', TaskViewSet)
 router.register(r'categories', CategoryViewSet)
 
+task_router = DefaultRouter()
+task_router.register(r'tasklists/(?P<task_list_pk>[^/.]+)/tasks', TaskViewSet, basename='task-list-tasks')
+
 urlpatterns = [
     path('', include(router.urls)),
+    path('tasklists/<int:tasklist_pk>/', include(task_router.urls)),  # Include task list URLs
+    path('tasklists/<int:tasklist_pk>/tasks/<int:pk>/', include(task_router.urls)),
 ]

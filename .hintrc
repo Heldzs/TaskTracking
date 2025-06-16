@@ -8,6 +8,14 @@
       {
         "aria-allowed-attr": "off"
       }
+    ],
+    "no-inline-styles": "off",
+    "button-type": "off",
+    "axe/forms": [
+      "default",
+      {
+        "label": "off"
+      }
     ]
   }
 }

@@ -1,15 +1,21 @@
-<form (ngSubmit)="login()">
-  <label>
-    Usuário:
-    <input type="text" [(ngModel)]="username" name="username" required />
-  </label><br />
+<div style="text-align:center;">
+  <h2>Registro</h2>
+  <form [formGroup]="registerForm" (ngSubmit)="onRegister()" style="margin-bottom: 20px;">
+    <input type="text" formControlName="username" placeholder="Usuário" required style="display: block; width: calc(100% - 20px); padding: 8px; margin: 5px auto;">
+    <div *ngIf="registerForm.controls['username'].invalid && registerForm.controls['username'].touched" style="color: red; font-size: 0.9em;">Usuário é obrigatório.</div>
+    <input type="email" formControlName="email" placeholder="Email" required style="display: block; width: calc(100% - 20px); padding: 8px; margin: 5px auto;">
+    <div *ngIf="registerForm.controls['email'].invalid && registerForm.controls['email'].touched" style="color: red; font-size: 0.9em;">Email é obrigatório e válido.</div>
+    <input type="password" formControlName="password" placeholder="Senha" required style="display: block; width: calc(100% - 20px); padding: 8px; margin: 5px auto;">
+    <div *ngIf="registerForm.controls['password'].invalid && registerForm.controls['password'].touched" style="color: red; font-size: 0.9em;">Senha é obrigatória (mín. 6 caracteres).</div>
+    <button type="submit" [disabled]="registerForm.invalid" style="padding: 10px 20px; margin-top: 10px; cursor: pointer;">Registrar</button>
+  </form>
 
-  <label>
-    Senha:
-    <input type="password" [(ngModel)]="password" name="password" required />
-  </label><br />
+  <hr style="margin: 30px 0;">
 
-  <button type="submit">Entrar</button>
-</form>
-
-<p *ngIf="error" style="color:red;">{{ error }}</p>
+  <h2>Login</h2>
+  <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+    <input type="text" formControlName="username" placeholder="Usuário" required style="display: block; width: calc(100% - 20px); padding: 8px; margin: 5px auto;">
+    <input type="password" formControlName="password" placeholder="Senha" required style="display: block; width: calc(100% - 20px); padding: 8px; margin: 5px auto;">
+    <button type="submit" [disabled]="loginForm.invalid" style="padding: 10px 20px; margin-top: 10px; cursor: pointer;">Login</button>
+  </form>
+</div>

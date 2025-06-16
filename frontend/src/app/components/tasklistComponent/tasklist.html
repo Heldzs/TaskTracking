@@ -1,56 +1,95 @@
 <!-- src/app/components/tasklist/tasklist.component.html -->
-<div style="text-align:center;">
-  <button (click)="onLogout()" style="padding: 10px 20px; cursor: pointer; background-color: #f44336; color: white; border: none; border-radius: 5px;">Logout</button>
-  <hr style="margin: 30px 0;">
+<div style="text-align:center; padding: 20px; font-family: 'Inter', sans-serif; max-width: 800px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
 
-  <h2>Minhas TaskLists</h2>
-  <form [formGroup]="tasklistForm" (ngSubmit)="onAddOrUpdateTaskList()" style="margin-bottom: 20px;">
-    <input type="text" formControlName="name" placeholder="Nome da Nova TaskList" required style="width: calc(100% - 140px); padding: 8px; margin-right: 10px;">
-    <button type="submit" [disabled]="tasklistForm.invalid" style="padding: 8px 15px; cursor: pointer;">{{ editingTaskList ? 'Atualizar' : 'Criar' }}</button>
-    <button *ngIf="editingTaskList" (click)="resetTaskListForm()" style="padding: 8px 15px; cursor: pointer; background-color: #6c757d; color: white; border: none; margin-left: 5px;">Cancelar</button>
+  <!-- Mensagens de Feedback -->
+  <div *ngIf="successMessage" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; margin-bottom: 15px; border-radius: 5px; animation: fadeInOut 3s forwards;">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" style="background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 10px; margin-bottom: 15px; border-radius: 5px; animation: fadeInOut 3s forwards;">
+    {{ errorMessage }}
+  </div>
+
+  <style>
+    @keyframes fadeInOut {
+      0% { opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    button, input[type="text"], textarea, input[type="datetime-local"] {
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      padding: 8px 12px;
+      font-size: 1em;
+    }
+    button {
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+  </style>
+
+  <button (click)="onLogout()" style="padding: 10px 20px; cursor: pointer; background-color: #f44336; color: white; border: none; border-radius: 5px; margin-bottom: 20px;">Logout</button>
+
+  <h2 style="color: #333; margin-top: 20px; margin-bottom: 15px;">Minhas TaskLists</h2>
+  <form [formGroup]="tasklistForm" (ngSubmit)="onAddOrUpdateTaskList()" style="margin-bottom: 30px; display: flex; justify-content: center; align-items: center; flex-wrap: wrap;">
+    <input type="text" formControlName="name" placeholder="Nome da Nova TaskList" required style="flex-grow: 1; margin: 5px; max-width: 300px;">
+    <button type="submit" [disabled]="tasklistForm.invalid" style="padding: 10px 15px; cursor: pointer; background-color: #4CAF50; color: white; margin: 5px;">{{ editingTaskList ? 'Atualizar' : 'Criar' }}</button>
+    <button *ngIf="editingTaskList" (click)="resetTaskListForm()" style="padding: 10px 15px; cursor: pointer; background-color: #6c757d; color: white; border: none; margin: 5px;">Cancelar</button>
   </form>
 
   <ul style="list-style: none; padding: 0;">
-    <li *ngFor="let tl of taskLists" style="background-color: #f0f0f0; padding: 10px; margin-bottom: 5px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
-      <a href="#" (click)="selectTaskList(tl)" style="text-decoration: none; color: #333; font-weight: bold; flex-grow: 1; text-align: left;">{{ tl.title }}</a>
+    <li *ngFor="let tl of taskLists" style="background-color: #f9f9f9; padding: 15px; margin-bottom: 8px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+      <a href="#" (click)="selectTaskList(tl); $event.preventDefault()" style="text-decoration: none; color: #333; font-weight: bold; flex-grow: 1; text-align: left; cursor: pointer;">
+        {{ tl.title }}
+      </a>
       <div>
-        <button (click)="editTaskList(tl)" style="padding: 5px 10px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 3px; margin-right: 5px;">Editar</button>
-        <button (click)="deleteTaskList(tl.id!)" style="padding: 5px 10px; cursor: pointer; background-color: #dc3545; color: white; border: none; border-radius: 3px;">Excluir</button>
+        <button (click)="editTaskList(tl)" style="padding: 8px 12px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 5px; margin-right: 5px;">Editar</button>
+        <button (click)="deleteTaskList(tl.id!)" style="padding: 8px 12px; cursor: pointer; background-color: #dc3545; color: white; border: none; border-radius: 5px;">Excluir</button>
       </div>
     </li>
   </ul>
 
-  <hr *ngIf="selectedTaskList" style="margin: 30px 0;">
+  <hr *ngIf="selectedTaskList" style="margin: 30px 0; border-top: 1px dashed #eee;">
 
   <div *ngIf="selectedTaskList">
-    <h2>Tarefas em "{{ selectedTaskList.title }}"</h2>
-    <form [formGroup]="taskForm" (ngSubmit)="onAddOrUpdateTask()" style="margin-bottom: 20px;">
-      <input type="text" formControlName="title" placeholder="Título da Tarefa" required style="display: block; width: calc(100% - 20px); padding: 8px; margin: 5px auto;">
-      <div *ngIf="taskForm.controls['title'].invalid && taskForm.controls['title'].touched" style="color: red; font-size: 0.9em;">Título é obrigatório.</div>
-      <textarea formControlName="description" placeholder="Descrição" style="display: block; width: calc(100% - 20px); padding: 8px; margin: 5px auto;"></textarea>
-      <input type="text" formControlName="category" placeholder="Categoria" style="display: block; width: calc(100% - 20px); padding: 8px; margin: 5px auto;">
-      <input type="text" formControlName="priority" placeholder="Prioridade" style="display: block; width: calc(100% - 20px); padding: 8px; margin: 5px auto;">
-      <label for="deadline" style="display: block; margin-top: 10px;">Prazo Final:</label>
-      <input type="datetime-local" formControlName="deadline" id="deadline" style="display: block; width: calc(100% - 20px); padding: 8px; margin: 5px auto;">
-      <button type="submit" [disabled]="taskForm.invalid" style="padding: 10px 20px; margin-top: 10px; cursor: pointer;">{{ editingTask ? 'Atualizar' : 'Criar' }} Tarefa</button>
-      <button *ngIf="editingTask" (click)="resetTaskForm()" style="padding: 10px 20px; margin-top: 10px; cursor: pointer; background-color: #6c757d; color: white; border: none; margin-left: 5px;">Cancelar Edição</button>
+    <h2 style="color: #333; margin-top: 20px; margin-bottom: 15px;">Tarefas em "{{ selectedTaskList.title }}"</h2>
+    <form [formGroup]="taskForm" (ngSubmit)="onAddOrUpdateTask()" style="margin-bottom: 30px; padding: 15px; border: 1px solid #eee; border-radius: 8px; background-color: #f9f9f9;">
+      <input type="text" formControlName="title" placeholder="Título da Tarefa" required style="display: block; width: calc(100% - 20px); margin: 10px auto;">
+      <div *ngIf="taskForm.controls['title'].invalid && taskForm.controls['title'].touched" style="color: red; font-size: 0.9em; text-align: left; padding-left: 10px;">Título é obrigatório.</div>
+
+      <textarea formControlName="description" placeholder="Descrição (Opcional)" style="display: block; width: calc(100% - 20px); margin: 10px auto;"></textarea>
+      <input type="text" formControlName="category" placeholder="Categoria (Opcional)" style="display: block; width: calc(100% - 20px); padding: 8px; margin: 10px auto;">
+      <input type="text" formControlName="priority" placeholder="Prioridade (Opcional)" style="display: block; width: calc(100% - 20px); margin: 10px auto;">
+
+      <label for="deadline" style="display: block; margin-top: 15px; margin-bottom: 5px; text-align: left; padding-left: 10px; color: #555;">Prazo Final:</label>
+      <input type="datetime-local" formControlName="deadline" id="deadline" style="display: block; width: calc(100% - 20px); margin: 5px auto 15px auto;">
+
+      <button type="submit" [disabled]="taskForm.invalid || !selectedTaskList?.id" style="padding: 10px 20px; margin-right: 10px; cursor: pointer; background-color: #28a745; color: white;">{{ editingTask ? 'Atualizar' : 'Criar' }} Tarefa</button>
+      <button *ngIf="editingTask" (click)="resetTaskForm()" style="padding: 10px 20px; cursor: pointer; background-color: #6c757d; color: white; border: none;">Cancelar Edição</button>
     </form>
 
     <ul style="list-style: none; padding: 0;">
-      <li *ngFor="let task of selectedTaskList.tasks" style="background-color: #e9e9e9; padding: 10px; margin-bottom: 5px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; text-align: left;">
-        <label for="tasklistName" class="visually-hidden">Nome da Nova TaskList</label>
- <input type="text" id="tasklistName" formControlName="name" placeholder="Nome da Nova TaskList" required style="width: calc(100% - 140px); padding: 8px; margin-right: 10px;">
-    <button type="submit" [disabled]="tasklistForm.invalid" style="padding: 8px 15px; cursor: pointer;">{{ editingTaskList ? 'Atualizar' : 'Criar' }}</button>
+      <li *ngFor="let task of selectedTaskList.tasks" style="background-color: #eef; padding: 15px; margin-bottom: 8px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; text-align: left; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+        <input type="checkbox" [checked]="task.done" (change)="toggleComplete(task)" style="margin-right: 15px; transform: scale(1.3); cursor: pointer;">
         <span [style.textDecoration]="task.done ? 'line-through' : 'none'" style="flex-grow: 1;">
-          <strong>{{ task.content }}</strong><br>
-          <small *ngIf="task.due_date">Prazo: {{ task.due_date | date:'short' }}<br></small>
-          <small *ngIf="task.priority"> | Prioridade: {{ task.priority }}</small>
+          <strong style="color: #333;">{{ task.content }}</strong><br>
+          <small *ngIf="task.content" style="color: #666;">Descrição: {{ task.content }}<br></small>
+          <small *ngIf="task.due_date" style="color: #666;">Prazo: {{ task.due_date | date:'short' }}</small>
+          <small *ngIf="task.priority" style="color: #666;"> | Prioridade: {{ task.priority }}</small>
         </span>
         <div>
-          <button (click)="editTask(task)" style="padding: 5px 10px; cursor: pointer; background-color: #28a745; color: white; border: none; border-radius: 3px; margin-right: 5px;">Editar</button>
-          <button (click)="deleteTask(task.id!)" style="padding: 5px 10px; cursor: pointer; background-color: #dc3545; color: white; border: none; border-radius: 3px;">Excluir</button>
+          <button (click)="editTask(task)" style="padding: 8px 12px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 5px; margin-right: 5px;">Editar</button>
+          <button (click)="deleteTask(task.id!)" style="padding: 8px 12px; cursor: pointer; background-color: #dc3545; color: white; border: none; border-radius: 5px;">Excluir</button>
         </div>
+      </li>
+      <li *ngIf="selectedTaskList.tasks?.length === 0" style="text-align: center; color: #888; padding: 20px; border: 1px dashed #eee; border-radius: 8px; margin-top: 20px;">
+        Nenhuma tarefa nesta lista ainda.
       </li>
     </ul>
   </div>
 </div>
+

@@ -12,5 +12,6 @@ task_router.register(r'tasklists/(?P<task_list_pk>[^/.]+)/tasks', TaskViewSet, b
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('tasklists/<int:task_list_pk>', include(task_router.urls)),
+    path('tasklists/<int:tasklist_pk>/', include(task_router.urls)),  # Include task list URLs
+    path('tasklists/<int:tasklist_pk>/tasks/<int:pk>/', include(task_router.urls)),
 ]

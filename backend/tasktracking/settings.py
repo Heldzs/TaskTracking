@@ -141,8 +141,8 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
     "ALGORITHM": "HS256",
     "SIGNING_KEY": "super-secret-jwt-key-change-in-prod-12345", # MUDE ISSO EM PRODUÇÃO!
     "AUTH_HEADER_TYPES": ("Bearer",),
